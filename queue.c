@@ -70,7 +70,7 @@ bool q_insert_head(queue_t *q, char *s)
     if (0 == q->size)
         q->tail = newh;
 
-    /*update size*/
+    /* Update size*/
     q->size += 1;
 
     return true;
@@ -129,6 +129,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
         return false;
     if (0 == q->size)
         return false;
+
     /* Process string */
     size_t length = strlen(q->head->value) + 1;
     if (bufsize < length) {
