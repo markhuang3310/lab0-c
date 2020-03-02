@@ -103,11 +103,12 @@ bool q_insert_tail(queue_t *q, char *s)
 
     /* Process link */
     newt->next = NULL;
-    q->tail->next = newt;
+    /* Handle empty queue */
+    if (0 != q->size)
+        q->tail->next = newt;
+    else
+        q->head = newt;
     q->tail = newt;
-    /* First insert element is both tail and head */
-    if (0 == q->size)
-        q->tail = newt;
 
     /* Update size */
     q->size += 1;
