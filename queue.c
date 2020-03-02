@@ -131,13 +131,15 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
     if (0 == q->size)
         return false;
 
-    /* Process string */
-    size_t length = strlen(q->head->value) + 1;
-    if (bufsize < length) {
-        memcpy(sp, q->head->value, bufsize - 1);
-        sp[bufsize - 1] = '\0';
-    } else {
-        memcpy(sp, q->head->value, length);
+    if (sp) {
+        /* Process string */
+        size_t length = strlen(q->head->value) + 1;
+        if (bufsize < length) {
+            memcpy(sp, q->head->value, bufsize - 1);
+            sp[bufsize - 1] = '\0';
+        } else {
+            memcpy(sp, q->head->value, length);
+        }
     }
     free(q->head->value);
 
