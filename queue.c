@@ -193,6 +193,9 @@ void q_reverse(queue_t *q)
     return;
 }
 
+void create(list_ele_t *heap[], int size);
+void down_adjust(list_ele_t *heap[], int i, int size);
+
 /*
  * Sort elements of queue in ascending order
  * No effect if q is NULL or empty. In addition, if q has only one
@@ -204,6 +207,59 @@ void q_sort(queue_t *q)
         return;
     if (0 == q->size)
         return;
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    int step_count = q->size;
+    list_ele_t *heap[q->size + 1];
+    list_ele_t *tmp_ptr = q->head;
+    for (int i = 1; i <= q->size; i++) {
+        heap[i] = tmp_ptr;
+        tmp_ptr = tmp_ptr->next;
+    }
+
+    create(heap, q->size);
+
+    // sorting
+    while (step_count > 1) {
+        // swap heap[1] and heap[last]
+        int last = step_count;
+        tmp_ptr = heap[1];
+        heap[1] = heap[last];
+        heap[last] = tmp_ptr;
+        step_count--;
+        down_adjust(heap, 1, step_count);
+    }
+
+    // reconnect link of q
+    q->head = heap[1];
+    tmp_ptr = q->head;
+    for (int i = 2; i <= q->size; i++) {
+        tmp_ptr->next = heap[i];
+        tmp_ptr = tmp_ptr->next;
+    }
+    tmp_ptr->next = NULL;
+    q->tail = tmp_ptr;
+    return;
+}
+void create(list_ele_t *heap[], int size)
+{
+    for (int i = size / 2; i >= 1; i--)
+        down_adjust(heap, i, size);
+}
+
+void down_adjust(list_ele_t *heap[], int i, int size)
+{
+    int flag = 1;
+    list_ele_t *temp;
+    while (2 * i <= size && flag == 1) {
+        int j = 2 * i;  // j points to left child
+        if (j + 1 <= size && strcmp(heap[j + 1]->value, heap[j]->value) > 0)
+            j = j + 1;
+        if (strcmp(heap[i]->value, heap[j]->value) > 0)
+            flag = 0;
+        else {
+            temp = heap[i];
+            heap[i] = heap[j];
+            heap[j] = temp;
+            i = j;
+        }
+    }
 }
